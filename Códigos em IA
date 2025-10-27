@@ -1,0 +1,13 @@
+Alguns códigos utilizados foram produzidos por IA. Isso ocorreu pelo motivo de que foi muito difícil encontrar métodos que satisfazessem as condições e as especificações que eu procurava. Por isso, utilizei a IA.
+Abaixo se encontram os códigos que foram produzidos por IA:
+
+tabelatendencias <- data.frame(
+  Variavel = names(numeric_vars),
+  Media = round(sapply(numeric_vars, mean), 2),
+  Mediana = round(sapply(numeric_vars, median), 2),
+  Q1 = round(sapply(numeric_vars, function(x) quantile(x, 0.25)), 2),
+  Q3 = round(sapply(numeric_vars, function(x) quantile(x, 0.75)), 2)
+)
+
+Para os gráficos, eu tomei a IA como base e fui modificando alguns códigos de acordo com as necessidades. Em suma, eu aprendi melhor como manusear o código e fui aplicando para os diversos gráficos apresentados.
+Para o LaTeX, usei a base do documento mostrado pela professora e fui modificando. Por isso, algumas coisas se encontram em desordem. Não consegui mudar.
