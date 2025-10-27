@@ -1,0 +1,74 @@
+library(readr)
+library(dplyr)
+library(ggplot2)
+
+rm(list = ls())
+graphics.off()
+setwd("C:/Users/Erick/Documents") # parte do código tirada do documento enviado
+getwd()
+list.files()
+
+dados <- read_csv("HW1_bike_sharing.csv", show_col_types = FALSE)
+head(dados)
+View(dados)
+
+str(dados) # Mostra o tipo da variável (ao lado do nome da variável)
+numero_obs <- nrow(dados) # Mostra o número de observações totais
+primeirodia <- min(dados$dteday) # Mostra a data do primeiro dia observado
+ultimodia <- max(dados$dteday) # Mostra a data do último dia observado
+
+# Seleção das estatísticas numéricas relevantes
+numeric_vars <- dados %>% select(temp, casual, registered)
+
+# Coloquei as variáveis em uma tabela com as medidas, com seus devidos cálculos
+tabelatendencias <- data.frame(
+  Variável = names(numeric_vars),
+  Média = round(sapply(numeric_vars, mean), 2),
+  Mediana = round(sapply(numeric_vars, median), 2),
+  Q1 = round(sapply(numeric_vars, function(x) quantile(x, 0.25)), 2),
+  Q3 = round(sapply(numeric_vars, function(x) quantile(x, 0.75)), 2)
+)
+
+# Atribuição de níveis às variáveis season e weathersit
+dados$season <- factor(dados$season, levels=c(1,2,3,4),
+                      labels=c("Inverno", "Primavera", "Verão", "Outono"))
+dados$weathersit <- factor(dados$weathersit, levels=c(1,2,3,4),
+                          labels=c("Tempo bom", "Tempo ok", "Tempo um pouco adverso", "Tempo ruim"))
+
+# Construção do gráfico de barras para season
+ggplot(dados, aes(x=season)) +
+  geom_bar(fill="skyblue") +
+  labs(title="Número de Usuários por Estação", x="Estação", y="Usuários")
+
+# Construção do gráfico de barras para weathersit
+ggplot(dados, aes(x=weathersit)) +
+  geom_bar(fill="pink") +
+  labs(title="Número de Usuários por Condição Climática", x="Condição Climática", y="Usuários")
+
+# Cálculo do total de usuários e da temperatura real de acordo com o próprio enunciado
+dados <- dados %>%
+        mutate(total_usuarios = casual + registered,
+              temp_real = temp * 41)
+
+total_usuarios = sum(dados$casual + dados$registered)
+
+# Print dos resultados
+cat("Número de observações: ", round(numero_obs,2), "\n")
+print(primeirodia)
+print(ultimodia)
+cat("Número total de usuários: ", total_usuarios, "\n")
+print(tabelatendencias)
+
+# Gráfico de séries temporais: temperatura
+ggplot(dados, aes(x=dteday, y=temp_real)) +
+  geom_line(color="red") +
+  labs(title="Temperatura Real ao Longo do Tempo", x="Data", y="Temperatura")
+
+# Gráfico de séries temporais: total de usuários
+ggplot(dados, aes(x=dteday, y=total_usuarios)) +
+  geom_line(color="blue") +
+  labs(title="Número Total de Usuários ao Longo do Tempo", x="Data", y="Total de Usuários")
+
+
+
+
