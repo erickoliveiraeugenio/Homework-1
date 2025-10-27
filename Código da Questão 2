@@ -1,0 +1,124 @@
+library(ggplot2)
+library(dplyr)
+
+# Criação da tabela utilizando o método data.frame
+Idade <- c(28, 34, 46, 26, 37,
+           29, 51, 51, 39, 43,
+           58, 44, 25, 23, 52,
+           42, 48, 33, 38, 46)
+
+Nacionalidade <- c("Italiana", "Inglesa", "Belga", "Espanhola", "Italiana",
+                   "Espanhola", "Francesa", "Belga", "Italiana", "Italiana",
+                   "Italiana", "Inglesa", "Francesa", "Espanhola", "Italiana",
+                   "Alemana", "Francesa", "Italiana", "Alemana", "Italiana")
+
+Renda <- c(2.3, 1.6, 1.2, 0.9, 2.1,
+           1.6, 1.8, 1.4, 1.2, 2.8,
+           3.4, 2.7, 1.6, 1.2, 1.1,
+           2.5, 2.0, 1.7, 2.1, 3.2)
+
+Experiencia <- c(2, 8, 21, 1, 15,
+                 3, 28, 5, 13, 20,
+                 32, 23, 1, 0, 29,
+                 18, 19, 7, 12, 23)
+
+Dados <- data.frame(Idade, Nacionalidade, Renda, Experiencia)
+
+# Cálculo das medidas de tendência central da idade
+media_idade <- mean(Idade)
+mediana_idade <- median(Idade)
+dp_idade <- sd(Idade)
+
+# Cálculo das medidas de tendência central da renda
+media_renda <- mean(Renda)
+mediana_renda <- median(Renda)
+dp_renda <- sd(Renda)
+
+# Cálculo das medidas de tendência central dos anos de experiência
+media_exp <- mean(Experiencia)
+mediana_exp <- median(Experiencia)
+dp_exp <- sd(Experiencia)
+
+# Uso da função aggregate para calcular e dispor a maior renda média desejada por nacionalidade
+renda_por_nacionalidade <- aggregate (Renda ~ Nacionalidade, data = Dados, FUN = mean)
+maior_renda <- renda_por_nacionalidade[which.max(renda_por_nacionalidade$Renda), ]
+
+# Uso da função aggregate para calcular e dispor a maior média de anos de experiência desejada por nacionalidade
+exp_por_nacionalidade <- aggregate (Experiencia ~ Nacionalidade, data = Dados, FUN = mean)
+maior_exp <- exp_por_nacionalidade[which.max(renda_por_nacionalidade$Renda), ]
+
+# Uso da função subset para encontrar os candidatos com pelo menos 10 anos de experiência e renda desejada menor do que 2,0
+candidatos <- subset(Dados, Experiencia>=10 & Renda < 2.0)
+
+# Cálculo do coeficiente de Pearson
+pearson <- cor(Dados$Renda, Dados$Experiencia, method = "pearson")
+
+# Print dos resultados
+cat("Média das idades: ", round(media_idade,2), "\n")
+cat("Mediana das idades: ", round(mediana_idade,2), "\n")
+cat("Desvio padrão das idades: ", round(dp_idade,2), "\n")
+cat("Média das rendas desejadas: ", round(media_renda,2), "\n")
+cat("Mediana das rendas desejadas: ", round(mediana_renda,2), "\n")
+cat("Desvio padrão das rendas desejadas: ", round(dp_renda,2), "\n")
+cat("Média dos anos de experiências: ", round(media_exp,2), "\n")
+cat("Mediana dos anos de experiências: ", round(mediana_exp,2), "\n")
+cat("Desvio padrão das anos de experiências: ", round(dp_exp,2), "\n")
+
+maior_renda
+
+maior_exp
+
+cat("Coeficiente de Pearson: ", round(pearson,2), "\n")
+
+candidatos
+
+# Plotagem do gráfico de dispersão utilizando o método plot - Questão 2.3
+plot(Dados$Experiencia, Dados$Renda,
+     xlab = "Anos de Experiencia",
+     ylab = "Renda Desejada (em milhares de euros)",
+     main = "Grafico de Experiencia x Renda Desejada",
+     pch = 19, col = "blue"
+)
+
+# Adição da linha de regressão linear ao gráfico utilizando o método próprio lm
+modelo <- lm(Renda ~ Experiencia, data = Dados)
+abline(modelo, col = "red", lwd = 2)
+
+# Agrupando por nacionalidade e calculando a média de idade
+idade_por_nacionalidade <- Dados %>%
+  group_by(Nacionalidade) %>%
+  summarise(IdadeMedia = mean(Idade))
+
+# Gráfico de idade por nacionalidade - Q5
+ggplot(idade_por_nacionalidade, aes(x = Nacionalidade, y = IdadeMedia, fill = Nacionalidade)) +
+  geom_bar(stat = "identity", color = "black") +
+  labs(title = "Idade por Nacionalidade",
+       x = "Nacionalidade",
+       y = "Idade Média") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+# Agrupando por nacionalidade e calculando a média de renda
+renda_por_nacionalidade <- Dados %>%
+  group_by(Nacionalidade) %>%
+  summarise(RendaMedia = mean(Renda))
+
+
+# Gráfico de renda por nacionalidade - Q5
+ggplot(renda_por_nacionalidade, aes(x = Nacionalidade, y = RendaMedia, fill = Nacionalidade)) +
+  geom_bar(stat = "identity", color = "black") +
+  labs(title = "Renda Média por Nacionalidade",
+       x = "Nacionalidade",
+       y = "Renda Média (milhares de euros)") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+
+
+
+
+
+
+
+
+
