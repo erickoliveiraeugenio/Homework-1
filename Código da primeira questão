@@ -1,0 +1,51 @@
+# Vetor formado pelos dados fornecidos na questão 1
+dados <- c(15.8, 22.7, 26.8, 19.1, 18.5, 14.4, 8.3, 25.9, 26.4, 9.8, 21.9, 10.5,
+           17.3, 6.2, 18.0, 22.9, 24.6, 19.4, 12.3, 15.9, 20.1, 17.0, 22.3, 27.5,
+           23.9, 17.5, 11.0, 20.4, 16.2, 20.8, 20.9, 21.4, 18.0, 24.3, 11.8, 17.9,
+           18.7, 12.8, 15.5, 19.2, 13.9, 28.6, 19.4, 21.6, 13.5, 24.6, 20.0, 24.1,
+           9.0, 17.6, 25.7, 20.1, 13.2, 23.7, 10.7, 19.0, 14.5, 18.1, 31.8, 28.5,
+           22.7, 15.2, 23.0, 29.6, 11.2, 14.7, 20.5, 26.6, 13.3, 18.1, 24.8, 26.1,
+           7.7, 22.5, 19.3, 19.4, 16.7, 16.9, 23.5, 18.4)
+
+# Função feita para calcular a moda
+getmode <- function(v) {
+  uniqv <- unique(v) # Acha os valores únicos do vetor
+  uniqv[which.max(tabulate(match(v, uniqv)))] # Acha o valor que mais se repete
+}
+
+# Cálculos (arredondados para duas casas decimais)
+media <- round(mean(dados), 2)
+mediana <- round(median(dados), 2)
+moda <- round(getmode(dados), 2)
+amplitude <- round(max(dados) - min(dados), 2)
+variancia <- round(var(dados), 2)
+dp <- round(sd(dados), 2)
+coeficiente <- round((dp / media) * 100, 2)
+
+# Cálculo dos quartis
+quartis <- quantile(dados, probs = c(0.25, 0.5, 0.75))
+iqr <- IQR(dados)
+
+# Cálculo da Questão 4
+excedente <- sum(dados > 25) # Cálculo do número de dias que passaram de 25 unidades
+proporcao <- (excedente / 80) * 100 # Cálculo da proporção
+
+# Print dos resultados
+cat("Média:", media, "\n")
+cat("Mediana:", mediana, "\n")
+cat("Moda:", moda, "\n")
+cat("Amplitude:", amplitude, "\n")
+cat("Variância:", variancia, "\n")
+cat("Desvio padrão:", dp, "\n")
+cat("Coeficiente de variação (%):", coeficiente, "\n")
+cat("Cálculo dos quartis: ", round(quartis,2), "\n")
+cat("Cálculo da proporção: ", round(proporcao,2), "\n")
+
+
+# Plotagem do histograma e do boxplot
+hist(dados, main="Emissoes diarias - Histograma", xlab= "Emissoes", ylab= "Densidade de frequencia", col="yellow", border="black")
+boxplot(dados, main="Emissoes diarias - Boxplot", ylab= "Emissoes")
+
+
+
+
